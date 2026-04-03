@@ -30,7 +30,7 @@ The figure above illustrates the prediction results of PAP-Net.
 conda create -n PAP-Net python=3.8 -y
 source activate PAP-Net 
 
-# RTX A5000 推荐：CUDA 11.8 + PyTorch 2.1.x（或保证 PyTorch/CUDA 与本机驱动匹配）
+# RTX A5000 recommended / 推荐: CUDA 11.8 + PyTorch 2.1.x (ensure PyTorch/CUDA matches your driver / 请确保与本机驱动匹配)
 conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=11.8 -c pytorch -c nvidia
 
 git clone https://github.com/jiaoZ7688/PAP-Net
@@ -90,7 +90,7 @@ Configuration files for training PAP-Net on each datasets are available [here](c
 To train, test and run demo, see the example scripts at [`scripts/`](scripts/):
 
 
-### 4. 使用自定义 COCO 数据集（A5000）
+### 4. Using Custom COCO Datasets (A5000) / 使用自定义 COCO 数据集（A5000）
 新增了自定义 COCO 注册与 A5000 示例脚本：
 - 配置：`configs/COCO-Custom-A5000-Base-RCNN-FPN-Fast-BCNet.yaml`
 - 训练：`scripts/train_coco_a5000.sh`

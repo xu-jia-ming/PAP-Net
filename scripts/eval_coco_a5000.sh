@@ -21,12 +21,11 @@ fi
 
 CONFIG_PATH="${CONFIG_PATH:-configs/COCO-Custom-A5000-Base-RCNN-FPN-Fast-BCNet.yaml}"
 NUM_GPUS="${NUM_GPUS:-1}"
-EXTRA_OPTS=("$@")
 
 python3 tools/train_net.py --num-gpus "${NUM_GPUS}" \
   --config-file "${CONFIG_PATH}" \
   --eval-only MODEL.WEIGHTS "${WEIGHT_PATH}" \
-  "${EXTRA_OPTS[@]}"
+  "$@"
 
 cat <<'JSON_INFO'
 Evaluation outputs are saved under OUTPUT_DIR/inference/ .

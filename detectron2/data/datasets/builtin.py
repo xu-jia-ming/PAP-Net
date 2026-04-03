@@ -452,6 +452,21 @@ def register_D2SA():
 
 
 def _load_custom_coco_classes():
+    """
+    Load class names for custom COCO datasets from environment variables.
+
+    Priority:
+      1) PAPNET_COCO_CLASSES: comma-separated class names
+      2) PAPNET_COCO_CLASSES_FILE: path to class file
+
+    Supported class file formats:
+      - .pkl / .pickle: pickled list
+      - .json: list or {"classes": [...]}
+      - text file: one class name per line
+
+    Returns:
+      list[str] or None
+    """
     classes_env = os.getenv("PAPNET_COCO_CLASSES", "").strip()
     if classes_env:
         return [x.strip() for x in classes_env.split(",") if x.strip()]
@@ -481,6 +496,19 @@ def _load_custom_coco_classes():
 
 
 def register_custom_coco_from_env():
+    """
+    Register custom COCO train/val datasets from environment variables.
+
+    Required variables:
+      PAPNET_COCO_TRAIN_JSON, PAPNET_COCO_TRAIN_ROOT,
+      PAPNET_COCO_VAL_JSON, PAPNET_COCO_VAL_ROOT
+
+    Optional:
+      PAPNET_COCO_TRAIN_NAME, PAPNET_COCO_VAL_NAME,
+      PAPNET_COCO_CLASSES, PAPNET_COCO_CLASSES_FILE
+
+    This function is called during builtin dataset initialization.
+    """
     train_json = os.getenv("PAPNET_COCO_TRAIN_JSON", "").strip()
     train_root = os.getenv("PAPNET_COCO_TRAIN_ROOT", "").strip()
     val_json = os.getenv("PAPNET_COCO_VAL_JSON", "").strip()

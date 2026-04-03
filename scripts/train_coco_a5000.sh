@@ -18,8 +18,7 @@ export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-8.6}"
 
 CONFIG_PATH="${CONFIG_PATH:-configs/COCO-Custom-A5000-Base-RCNN-FPN-Fast-BCNet.yaml}"
 NUM_GPUS="${NUM_GPUS:-1}"
-EXTRA_OPTS=("$@")
 
 python3 tools/train_net.py --num-gpus "${NUM_GPUS}" \
   --config-file "${CONFIG_PATH}" \
-  "${EXTRA_OPTS[@]}"
+  "$@"
