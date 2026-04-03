@@ -31,7 +31,6 @@ python3 tools/train_net.py --num-gpus "${NUM_GPUS}" \
 cat <<'JSON_INFO'
 Evaluation outputs are saved under OUTPUT_DIR/inference/ .
 COCO segmentation JSON files include:
-- coco_instances_results.json
 - coco_instances_amodal_results.json
 - coco_instances_visible_results.json
 JSON_INFO
