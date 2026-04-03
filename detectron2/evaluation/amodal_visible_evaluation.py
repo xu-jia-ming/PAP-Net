@@ -306,6 +306,18 @@ class AmodalVisibleEvaluator(DatasetEvaluator):
                 f.write(json.dumps(self._amodal_results))
                 f.flush()
 
+            file_path = os.path.join(self._output_dir, "coco_instances_results.json")
+            self._logger.info("Saving results to {}".format(file_path))
+            with PathManager.open(file_path, "w") as f:
+                f.write(json.dumps(self._amodal_results))
+                f.flush()
+
+            file_path = os.path.join(self._output_dir, "coco_instances_segm_results.json")
+            self._logger.info("Saving results to {}".format(file_path))
+            with PathManager.open(file_path, "w") as f:
+                f.write(json.dumps(self._amodal_results))
+                f.flush()
+
             file_path = os.path.join(self._output_dir, "coco_instances_amodal_occ_results.json")
             self._logger.info("Saving results to {}".format(file_path))
             #with PathManager.open(file_path, "w") as f:

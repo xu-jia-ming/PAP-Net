@@ -19,6 +19,7 @@ To add new dataset, refer to the tutorial "docs/DATASETS.md".
 
 import os
 import pickle
+import json
 
 from detectron2.data import DatasetCatalog, MetadataCatalog
 
@@ -450,6 +451,59 @@ def register_D2SA():
     # meta.thing_colors = [k["color"] for k in D2SA_CATEGORIES if k["isthing"] == 1] 
 
 
+def _load_custom_coco_classes():
+    classes_env = os.getenv("PAPNET_COCO_CLASSES", "").strip()
+    if classes_env:
+        return [x.strip() for x in classes_env.split(",") if x.strip()]
+
+    classes_file = os.getenv("PAPNET_COCO_CLASSES_FILE", "").strip()
+    if not classes_file:
+        return None
+
+    if not os.path.exists(classes_file):
+        return None
+
+    ext = os.path.splitext(classes_file)[1].lower()
+    if ext in [".pkl", ".pickle"]:
+        with open(classes_file, "rb") as fp:
+            return pickle.load(fp)
+    if ext == ".json":
+        with open(classes_file, "r", encoding="utf-8") as fp:
+            data = json.load(fp)
+        if isinstance(data, list):
+            return data
+        if isinstance(data, dict) and "classes" in data and isinstance(data["classes"], list):
+            return data["classes"]
+        return None
+
+    with open(classes_file, "r", encoding="utf-8") as fp:
+        return [line.strip() for line in fp if line.strip()]
+
+
+def register_custom_coco_from_env():
+    train_json = os.getenv("PAPNET_COCO_TRAIN_JSON", "").strip()
+    train_root = os.getenv("PAPNET_COCO_TRAIN_ROOT", "").strip()
+    val_json = os.getenv("PAPNET_COCO_VAL_JSON", "").strip()
+    val_root = os.getenv("PAPNET_COCO_VAL_ROOT", "").strip()
+
+    if not (train_json and train_root and val_json and val_root):
+        return
+
+    train_name = os.getenv("PAPNET_COCO_TRAIN_NAME", "papnet_coco_train").strip()
+    val_name = os.getenv("PAPNET_COCO_VAL_NAME", "papnet_coco_val").strip()
+    thing_classes = _load_custom_coco_classes()
+
+    registered = set(DatasetCatalog.list())
+    if train_name not in registered:
+        register_coco_instances(train_name, {}, train_json, train_root)
+        if thing_classes:
+            MetadataCatalog.get(train_name).thing_classes = thing_classes
+    if val_name not in registered:
+        register_coco_instances(val_name, {}, val_json, val_root)
+        if thing_classes:
+            MetadataCatalog.get(val_name).thing_classes = thing_classes
+
+
 # def register_D2SA():
 #     # train data
 #     register_coco_instances(
@@ -493,3 +547,4 @@ if __name__.endswith(".builtin"):
     register_kins()
     register_COCOA()
     register_D2SA()
+    register_custom_coco_from_env()
