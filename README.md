@@ -30,7 +30,8 @@ The figure above illustrates the prediction results of PAP-Net.
 conda create -n PAP-Net python=3.8 -y
 source activate PAP-Net 
 
-conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch
+# RTX A5000 推荐：CUDA 11.8 + PyTorch 2.1.x（或保证 PyTorch/CUDA 与本机驱动匹配）
+conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=11.8 -c pytorch -c nvidia
 
 git clone https://github.com/jiaoZ7688/PAP-Net
 cd PAP-Net/
@@ -87,6 +88,42 @@ KINS/
 ### 3. Training, Testing and Demo
 Configuration files for training PAP-Net on each datasets are available [here](configs/).
 To train, test and run demo, see the example scripts at [`scripts/`](scripts/):
+
+
+### 4. 使用自定义 COCO 数据集（A5000）
+新增了自定义 COCO 注册与 A5000 示例脚本：
+- 配置：`configs/COCO-Custom-A5000-Base-RCNN-FPN-Fast-BCNet.yaml`
+- 训练：`scripts/train_coco_a5000.sh`
+- 评估：`scripts/eval_coco_a5000.sh`
+
+运行前请设置数据集路径（必须）：
+```bash
+export PAPNET_COCO_TRAIN_JSON=/path/to/train.json
+export PAPNET_COCO_TRAIN_ROOT=/path/to/train_images
+export PAPNET_COCO_VAL_JSON=/path/to/val.json
+export PAPNET_COCO_VAL_ROOT=/path/to/val_images
+```
+可选类别名称（不设置也可训练/评估）：
+```bash
+# 二选一
+export PAPNET_COCO_CLASSES='cat,dog,...'
+# 或
+export PAPNET_COCO_CLASSES_FILE=/path/to/classes.json
+```
+训练：
+```bash
+bash scripts/train_coco_a5000.sh MODEL.ROI_HEADS.NUM_CLASSES <你的类别数>
+```
+评估：
+```bash
+WEIGHT_PATH=/path/to/model_final.pth bash scripts/eval_coco_a5000.sh MODEL.ROI_HEADS.NUM_CLASSES <你的类别数>
+```
+
+评估阶段会在 `OUTPUT_DIR/inference/` 下输出 COCO 分割结果 JSON，包括：
+- `coco_instances_results.json`
+- `coco_instances_segm_results.json`
+- `coco_instances_amodal_results.json`
+- `coco_instances_visible_results.json`
 
 ## Trained models
 - PAP-Net R50 on KINS (TBA)
