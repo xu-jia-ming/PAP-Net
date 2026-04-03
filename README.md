@@ -121,7 +121,6 @@ WEIGHT_PATH=/path/to/model_final.pth bash scripts/eval_coco_a5000.sh MODEL.ROI_H
 
 评估阶段会在 `OUTPUT_DIR/inference/` 下输出 COCO 分割结果 JSON，包括：
 - `coco_instances_results.json`
-- `coco_instances_segm_results.json`
 - `coco_instances_amodal_results.json`
 - `coco_instances_visible_results.json`
 
